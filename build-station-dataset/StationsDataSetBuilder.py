@@ -1,29 +1,35 @@
 from GoogleMapsAdapter import GoogleMapsAdapter
 from geopy import distance
-from Place import Place
 import json
 import logging
 
 class StationsDataSetBuilder:
-    def __init__(self, stations : list[dict]):
+    def __init__(self, origin, stations : list[dict]):
+        self.gma = GoogleMapsAdapter()        
         self._logger = logging.getLogger(__name__).getChild(__class__.__name__)        
-        self.gma = GoogleMapsAdapter()
         self.stations = stations
+        self.origin = origin
+
+    @classmethod
+    def from_file(cls, filepath):
+        with open(filepath, 'r') as input_json:
+            data = json.load(input_json)
+        return cls(data['origin'], data['stations'])
 
     def count(self):
         return len(self.stations)
 
-    def set_distances(self, starting_point : Place):
+    def set_distances(self):
         for station in self.stations:
             if 'geometry' in station:
-                logging.debug(f'calculating distance for [{starting_point.name}] to [{station['name']}] ')
-                station['distance_km'] = distance.distance((starting_point.latitude, starting_point.longitude), (station['geometry']['latitude'], station['geometry']['longitude'])).kilometers     
+                logging.debug(f'calculating distance for [{self.origin["name"]}] to [{station['name']}] ')
+                station['distance_km'] = distance.distance((self.origin['geometry']['latitude'], self.origin['geometry']['longitude']), (station['geometry']['latitude'], station['geometry']['longitude'])).kilometers     
                 self._logger.debug(f'\tgot distance of [{station['distance_km']} kilometers]')
 
-    def set_travel_times(self, starting_point : Place):
+    def set_travel_times(self):
         for station in self.stations:
-            self._logger.debug(f'attempting to get travel time for [{starting_point['name']}]')
-            if (time_secs := self.gma.get_journey_time(starting_point, Place(name=station['name'], latitude=station['geometry']['latitude'], longitude=station['geometry']['longitude'], place_id=station['place_id']))) is not None:
+            self._logger.debug(f'attempting to get travel time for [{self.origin['name']}]')
+            if (time_secs := self.gma.get_journey_time_from_place_id(self.origin['place_id'], station['place_id'])) is not None:
                 self._logger.debug(f'\tgot travel time of {time_secs} seconds')
                 station['travel_time_secs'] = time_secs
                 station['travel_time_mins'] = time_secs / 60
@@ -36,12 +42,17 @@ class StationsDataSetBuilder:
             if place_id is not None:
                 station['place_id'] = place_id
             else:
-                print(f'no geo data returned for station {station["name"]}')
-                logging.debug(f'no geo data returned for station {station["name"]}')
+                print(f'no place_id returned for station {station["name"]}')
+                logging.debug(f'noo place_id returned for station {station["name"]}')
 
-    def filter_to_stations_to_radius(self, radius_km):
+    def filter_stations_to_radius(self, radius_km):
         self.stations = [station for station in self.stations if ('distance_km' in station and station['distance_km'] <= radius_km) or ('distance_km' not in station)]
 
     def write(self, file):
+        json_out = { 
+                        'count': len(self.stations),
+                        'origin': self.origin,
+                        'stations': self.stations 
+                    }
         with open(file, 'w', encoding='utf-8') as fout:
-            json.dump(self.stations, fout, ensure_ascii=False, indent=4)
+            json.dump(json_out, fout, ensure_ascii=False, indent=4)

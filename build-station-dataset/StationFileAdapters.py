@@ -20,7 +20,8 @@ class TrainlineStationFileAdapter(StationFileAdapter):
         with open(self.filepath, 'r') as stations:
             stations = [
                             {   
-                                'name': fields[self.FILE_COL_NAME], 
+                                'name': fields[self.FILE_COL_NAME],
+                                'type': 'national_rail',
                                 'geometry' : {
                                     'latitude': fields[self.FILE_COL_LATITUDE], 
                                     'longitude': fields[self.FILE_COL_LONGITUDE] 
@@ -44,7 +45,8 @@ class TFLFileAdapter(StationFileAdapter):
             root = parser.parse(kml).getroot()
         stations = [ 
                         { 
-                            'name': place.name.text.lstrip().rstrip(), 
+                            'name': place.name.text.lstrip().rstrip(),
+                            'type': 'tfl',
                             'geometry': {
                                 'latitude': place.Point.coordinates.text.split(',')[self.FILE_COL_LATITUDE].rstrip().lstrip(), 
                                 'longitude': place.Point.coordinates.text.split(',')[self.FILE_COL_LONGITUDE].rstrip().lstrip() 
