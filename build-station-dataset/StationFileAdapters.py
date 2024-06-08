@@ -18,7 +18,7 @@ class TrainlineStationFileAdapter(StationFileAdapter):
 
     def get_stations(self):
         with open(self.filepath, 'r') as stations:
-            stations =[
+            stations = [
                             {   
                                 'name': fields[self.FILE_COL_NAME], 
                                 'geometry' : {
