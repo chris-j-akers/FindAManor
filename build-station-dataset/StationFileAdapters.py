@@ -19,14 +19,15 @@ class TrainlineStationFileAdapter(StationFileAdapter):
     def get_stations(self):
         with open(self.filepath, 'r') as stations:
             stations =[
-                        {   
-                            'name': fields[self.FILE_COL_NAME], 
-                            'geometry' : {
-                                    'latitude': fields[self.FILE_COL_LATITUDE], 
-                                    'longitude': fields[self.FILE_COL_LONGITUDE] 
-                            }
-                        } 
-                        for fields in [ station.split(self._separator) for station in stations ] if fields[self.FILE_COL_COUNTRY] == 'GB']
+                            {   
+                                'name': fields[self.FILE_COL_NAME], 
+                                'geometry' : {
+                                        'latitude': fields[self.FILE_COL_LATITUDE], 
+                                        'longitude': fields[self.FILE_COL_LONGITUDE] 
+                                }
+                            } 
+                            for fields in [ station.split(self._separator) for station in stations ] if fields[self.FILE_COL_COUNTRY] == 'GB'
+                        ]
         
             return stations
 
