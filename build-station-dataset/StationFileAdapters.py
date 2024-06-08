@@ -22,8 +22,8 @@ class TrainlineStationFileAdapter(StationFileAdapter):
                             {   
                                 'name': fields[self.FILE_COL_NAME], 
                                 'geometry' : {
-                                        'latitude': fields[self.FILE_COL_LATITUDE], 
-                                        'longitude': fields[self.FILE_COL_LONGITUDE] 
+                                    'latitude': fields[self.FILE_COL_LATITUDE], 
+                                    'longitude': fields[self.FILE_COL_LONGITUDE] 
                                 }
                             } 
                             for fields in [ station.split(self._separator) for station in stations ] if fields[self.FILE_COL_COUNTRY] == 'GB'
