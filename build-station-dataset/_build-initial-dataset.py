@@ -4,27 +4,27 @@ import json
 from StationFileAdapters import TFLFileAdapter, TrainlineStationFileAdapter
 from StationsDataSetBuilder import StationsDataSetBuilder
 
-if __name__ == '__main__':
-    # Args
-    ap = argparse.ArgumentParser()
-    ap.add_argument('--origin-file', required=True)
-    ap.add_argument('--output-file', required=True)
-    args = ap.parse_args()
-    # Log
-    logging.basicConfig(filename='find-a-manor.log', filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)        
-    # File parsers
-    print(f'building station file adapters')
-    tfl_file = TFLFileAdapter('./station-data/tfl-stations.kml')
-    trainline_file = TrainlineStationFileAdapter('./station-data/uk-stations.csv')
-    # Build initial list of all stations
-    print(f'building dataset object')
+def initialise_dataset(origin_file, trainline_filepath, tfl_filepath ):
+    tfl_file = TFLFileAdapter(tfl_filepath)
+    trainline_file=TrainlineStationFileAdapter(trainline_filepath)
     with open(args.origin_file, 'r') as origin_file:
         origin = json.load(origin_file)
     stations = StationsDataSetBuilder(origin, tfl_file.get_stations() + trainline_file.get_stations())
     print(f'\t[{stations.count()}] stations found')
-    # Add distance to all stations from origin
-    print(f'setting distances from origin [{origin["name"]}, {origin["geometry"]["latitude"]}, {origin["geometry"]["longitude"]}, {origin["place_id"]}]')
+    return stations
+
+def parse_args():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--origin-file', required=True)
+    ap.add_argument('--output-file', required=True)
+    return ap.parse_args()
+
+if __name__ == '__main__':
+    logging.basicConfig(filename='find-a-manor.log', filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)            
+    args = parse_args()
+    print('initialising stations dataset')
+    stations = initialise_dataset(args.origin_file, tfl_filepath='./station-data/tfl-stations.kml', trainline_filepath='./station-data/uk-stations.csv')
+    print(f'setting distances from origin')
     stations.set_distances()
-    # Save list to specified file
     print(f'writing to file [{args.output_file}]')
     stations.write(args.output_file)
