@@ -4,11 +4,15 @@ import json
 from StationFileAdapters import TFLFileAdapter, TrainlineStationFileAdapter
 from StationsDataSetBuilder import StationsDataSetBuilder
 
+def parse_origin_file(file_path):
+    with open(file_path, 'r') as origin_file:
+        origin = json.load(origin_file)
+    return origin
+
 def initialise_dataset(origin_file, trainline_filepath, tfl_filepath ):
     tfl_file = TFLFileAdapter(tfl_filepath)
     trainline_file=TrainlineStationFileAdapter(trainline_filepath)
-    with open(args.origin_file, 'r') as origin_file:
-        origin = json.load(origin_file)
+    origin = parse_origin_file(origin_file)
     stations = StationsDataSetBuilder(origin, tfl_file.get_stations() + trainline_file.get_stations())
     print(f'\t[{stations.count()}] stations found')
     return stations
