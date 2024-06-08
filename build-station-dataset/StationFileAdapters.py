@@ -28,7 +28,6 @@ class TrainlineStationFileAdapter(StationFileAdapter):
                             } 
                             for fields in [ station.split(self._separator) for station in stations ] if fields[self.FILE_COL_COUNTRY] == 'GB'
                         ]
-        
             return stations
 
 class TFLFileAdapter(StationFileAdapter):
@@ -53,5 +52,4 @@ class TFLFileAdapter(StationFileAdapter):
                         } 
                         for place in root.Document.Placemark 
                     ]
-        
         return stations
