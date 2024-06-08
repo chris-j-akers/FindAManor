@@ -20,10 +20,10 @@ class TrainlineStationFileAdapter(StationFileAdapter):
         with open(self.filepath, 'r') as stations:
             stations =[
                         {   
-                        'name': fields[self.FILE_COL_NAME], 
-                        'geometry' : {
-                                'latitude': fields[self.FILE_COL_LATITUDE], 
-                                'longitude': fields[self.FILE_COL_LONGITUDE] 
+                            'name': fields[self.FILE_COL_NAME], 
+                            'geometry' : {
+                                    'latitude': fields[self.FILE_COL_LATITUDE], 
+                                    'longitude': fields[self.FILE_COL_LONGITUDE] 
                             }
                         } 
                         for fields in [ station.split(self._separator) for station in stations ] if fields[self.FILE_COL_COUNTRY] == 'GB']
@@ -44,13 +44,13 @@ class TFLFileAdapter(StationFileAdapter):
             root = parser.parse(kml).getroot()
         stations = [ 
                         { 
-                        'name': place.name.text.lstrip().rstrip(), 
-                        'geometry': {
-                            'latitude': place.Point.coordinates.text.split(',')[self.FILE_COL_LATITUDE].rstrip().lstrip(), 
-                            'longitude': place.Point.coordinates.text.split(',')[self.FILE_COL_LONGITUDE].rstrip().lstrip() 
-                        }
-                    } 
-                    for place in root.Document.Placemark 
+                            'name': place.name.text.lstrip().rstrip(), 
+                            'geometry': {
+                                'latitude': place.Point.coordinates.text.split(',')[self.FILE_COL_LATITUDE].rstrip().lstrip(), 
+                                'longitude': place.Point.coordinates.text.split(',')[self.FILE_COL_LONGITUDE].rstrip().lstrip() 
+                            }
+                        } 
+                        for place in root.Document.Placemark 
                     ]
         
         return stations

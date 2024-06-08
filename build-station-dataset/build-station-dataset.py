@@ -58,6 +58,6 @@ def main():
     stations.write('./stations.json')
 
 if __name__ == '__main__':
-       main()
+    main()
 
 
