@@ -10,7 +10,7 @@ def parse_args():
 
 if __name__ == '__main__':
     logging.basicConfig(filename='find-a-manor.log', filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)        
-    args = parse_args    
+    args = parse_args()
     # Go!
     sdb = StationsDataSetBuilder.from_file(args.input_file)
     sdb.set_google_place_id()
