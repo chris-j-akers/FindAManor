@@ -9,11 +9,11 @@ def parse_origin_file(file_path):
         origin = json.load(origin_file)
     return origin
 
-def initialise_dataset(origin_file, trainline_filepath, tfl_filepath):
+def initialise_dataset(origin_file, trainline_filepath, tfl_filepath, no_tfl=False):
     tfl_file = TFLFileAdapter(tfl_filepath)
     trainline_file=TrainlineStationFileAdapter(trainline_filepath)
     origin = parse_origin_file(origin_file)
-    stations = StationsDataSetBuilder(origin, tfl_file.get_stations() + trainline_file.get_stations())
+    stations = StationsDataSetBuilder(origin, trainline_file.get_stations() if no_tfl else tfl_file.get_stations() + trainline_file.get_stations())
     print(f'\t- [{stations.count()}] stations found')
     return stations
 
@@ -21,13 +21,14 @@ def parse_args():
     ap = argparse.ArgumentParser()
     ap.add_argument('--origin-file', required=True)
     ap.add_argument('--output-file', required=True)
+    ap.add_argument('--no-tfl', required=False, default=False)
     return ap.parse_args()
 
 if __name__ == '__main__':
     logging.basicConfig(filename='find-a-manor.log', filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)            
     args = parse_args()
     print('- Initialising stations dataset')
-    stations = initialise_dataset(args.origin_file, tfl_filepath='./station-data/tfl-stations.kml', trainline_filepath='./station-data/uk-stations.csv')
+    stations = initialise_dataset(args.origin_file, tfl_filepath='./station-data/tfl-stations.kml', trainline_filepath='./station-data/uk-stations.csv', no_tfl=args.no_tfl)
     print(f'- Setting distances from origin')
     stations.set_distances()
     print(f'- Writing to file [{args.output_file}]')

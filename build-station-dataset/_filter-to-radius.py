@@ -4,8 +4,9 @@ from StationsDataSetBuilder import StationsDataSetBuilder
 
 def parse_args():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--origin-file', required=True)
-    ap.add_argument('--output-file', required=True)
+    ap.add_argument('--input-file', required=True)
+    ap.add_argument('--radius', required=True)
+    ap.add_argument('--output-file', required=False)
     return ap.parse_args()
 
 if __name__ == '__main__':
