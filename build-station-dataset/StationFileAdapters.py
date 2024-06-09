@@ -2,7 +2,7 @@ import logging
 from pykml import parser
 
 class StationFileAdapter:
-    def get_stations(self):
+    def get_stations(self, set_station_suffix=True):
         raise NotImplementedError
     
     def set_station_suffix(self, place_name):
@@ -21,11 +21,11 @@ class TrainlineStationFileAdapter(StationFileAdapter):
         self._separator = ';'
         self.filepath = filepath
 
-    def get_stations(self):
+    def get_stations(self, set_station_suffix=True):
         with open(self.filepath, 'r') as stations:
             stations = [
                             {   
-                                'name': self.set_station_suffix(fields[self.FILE_COL_NAME]),
+                                'name': self.set_station_suffix(fields[self.FILE_COL_NAME]) if set_station_suffix else fields[self.FILE_COL_NAME],
                                 'type': 'national_rail',
                                 'geometry' : {
                                     'latitude': fields[self.FILE_COL_LATITUDE], 
@@ -45,12 +45,12 @@ class TFLFileAdapter(StationFileAdapter):
         self._separator = ','
         self.filepath = filepath
 
-    def get_stations(self):      
+    def get_stations(self, set_station_suffix=True):      
         with open(self.filepath) as kml:
             root = parser.parse(kml).getroot()
         stations = [ 
                         { 
-                            'name': self.set_station_suffix(place.name.text.lstrip().rstrip()),
+                            'name': self.set_station_suffix(place.name.text.lstrip().rstrip()) if set_station_suffix else place.name.text.lstrip().rstrip(),
                             'type': 'tfl',
                             'geometry': {
                                 'latitude': place.Point.coordinates.text.split(',')[self.FILE_COL_LATITUDE].rstrip().lstrip(), 
