@@ -37,6 +37,7 @@ class StationsDataSetBuilder:
                 station['travel_time_secs'] = time_secs
                 station['travel_time_mins'] = time_secs / 60
             else:
+                print(f'- Unable to get travel time for [{station['name']}]')
                 self._logger.debug(f'\tunable to get travel time for [{station['name']}]')
 
     def set_travel_times_from_coords(self):
@@ -50,6 +51,7 @@ class StationsDataSetBuilder:
                 station['travel_time_secs'] = time_secs
                 station['travel_time_mins'] = time_secs / 60
             else:
+                print(f'- Unable to get travel time for [{station['name']}]')                
                 self._logger.debug(f'\tunable to get travel time for [{station['name']}]')                
 
     def set_google_place_id(self):

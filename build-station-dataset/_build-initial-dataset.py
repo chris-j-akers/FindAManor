@@ -14,7 +14,7 @@ def initialise_dataset(origin_file, trainline_filepath, tfl_filepath, no_tfl=Fal
     trainline_file=TrainlineStationFileAdapter(trainline_filepath)
     origin = parse_origin_file(origin_file)
     stations = StationsDataSetBuilder(origin, trainline_file.get_stations() if no_tfl else tfl_file.get_stations() + trainline_file.get_stations())
-    print(f'\t- [{stations.count()}] stations found')
+    print(f'[{stations.count()}] stations found')
     return stations
 
 def parse_args():
