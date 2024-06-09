@@ -24,6 +24,17 @@ class GoogleMapsAdapter:
             self._logger.debug(f'{self._format_json(response_json)}')            
             return response_json['rows'][0]['elements'][0]['duration']['value']
         else:
+            return None
+        
+    def get_journey_time_from_coords(self, origin_coords, destination_coords):
+        URL='https://maps.googleapis.com/maps/api/distancematrix/json?mode=transit&transit_mode=rail&units=kilometers&origins={0}&destinations={1}&key=' + self.api_key
+        response_json = requests.get(URL.format(f'{origin_coords[0]},{origin_coords[1]}', f'{destination_coords[0]},{destination_coords[1]}')).json()
+        if (response_json['rows'][0]['elements'][0]['status'] == 'OK'):
+            self._logger.debug(f'{self._format_json(response_json)}')            
+            return response_json['rows'][0]['elements'][0]['duration']['value']
+        else:
+            self._logger.debug(f'unable to get data for co-ordinates {destination_coords}, response is: ')
+            self._logger.debug(f'{self._format_json(response_json)}')
             return None        
         
     def get_place_id(self, latitude, longitude):

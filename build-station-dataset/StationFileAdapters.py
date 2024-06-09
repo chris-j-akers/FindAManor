@@ -4,6 +4,11 @@ from pykml import parser
 class StationFileAdapter:
     def get_stations(self):
         raise NotImplementedError
+    
+    def set_station_suffix(self, place_name):
+        station = place_name.split(' ')
+        return place_name if station[-1] in ['station', 'Station'] else place_name + ' ' + 'Station'
+
 
 class TrainlineStationFileAdapter(StationFileAdapter):
     FILE_COL_NAME=1
@@ -20,7 +25,7 @@ class TrainlineStationFileAdapter(StationFileAdapter):
         with open(self.filepath, 'r') as stations:
             stations = [
                             {   
-                                'name': fields[self.FILE_COL_NAME],
+                                'name': self.set_station_suffix(fields[self.FILE_COL_NAME]),
                                 'type': 'national_rail',
                                 'geometry' : {
                                     'latitude': fields[self.FILE_COL_LATITUDE], 
@@ -45,7 +50,7 @@ class TFLFileAdapter(StationFileAdapter):
             root = parser.parse(kml).getroot()
         stations = [ 
                         { 
-                            'name': place.name.text.lstrip().rstrip(),
+                            'name': self.set_station_suffix(place.name.text.lstrip().rstrip()),
                             'type': 'tfl',
                             'geometry': {
                                 'latitude': place.Point.coordinates.text.split(',')[self.FILE_COL_LATITUDE].rstrip().lstrip(), 

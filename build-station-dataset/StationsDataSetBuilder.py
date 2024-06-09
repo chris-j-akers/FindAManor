@@ -26,7 +26,7 @@ class StationsDataSetBuilder:
                 station['distance_km'] = distance.distance((self.origin['geometry']['latitude'], self.origin['geometry']['longitude']), (station['geometry']['latitude'], station['geometry']['longitude'])).kilometers     
                 self._logger.debug(f'\tgot distance of [{station['distance_km']} kilometers]')
 
-    def set_travel_times(self):
+    def set_travel_times_from_place_id(self):
         for station in self.stations:
             self._logger.debug(f'attempting to get travel time for [{self.origin['name']}]')
             if (time_secs := self.gma.get_journey_time_from_place_id(self.origin['place_id'], station['place_id'])) is not None:
@@ -35,6 +35,16 @@ class StationsDataSetBuilder:
                 station['travel_time_mins'] = time_secs / 60
             else:
                 self._logger.debug(f'\tunable to get travel time for [{station['name']}]')
+
+    def set_travel_times_from_coords(self):
+        for station in self.stations:
+            self._logger.debug(f'attempting to get travel time for [{self.origin['name']}]')
+            if (time_secs := self.gma.get_journey_time_from_coords((self.origin['geometry']['latitude'],self.origin['geometry']['longitude']), (station['geometry']['latitude'],station['geometry']['longitude']))) is not None:
+                self._logger.debug(f'\tgot travel time of {time_secs} seconds')
+                station['travel_time_secs'] = time_secs
+                station['travel_time_mins'] = time_secs / 60
+            else:
+                self._logger.debug(f'\tunable to get travel time for [{station['name']}]')                
 
     def set_google_place_id(self):
         for station in self.stations:

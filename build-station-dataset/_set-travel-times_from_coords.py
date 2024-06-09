@@ -13,5 +13,5 @@ if __name__ == '__main__':
     logging.basicConfig(filename='find-a-manor.log', filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)        
     # Go!
     sdb = StationsDataSetBuilder.from_file(args.input_file)
-    sdb.set_travel_times()
+    sdb.set_travel_times_from_coords()
     sdb.write(args.output_file if args.output_file is not None else args.input_file)
