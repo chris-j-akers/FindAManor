@@ -5,16 +5,16 @@ import datetime
 
 class GoogleMapsAdapter:
 
-    def _get_next_weekday_as_secs_from_epoch(self, date=datetime.date.today()):
-        next_weekday_date = date + datetime.timedelta(days=-date.isoweekday() + 8) if date.isoweekday() in set((6, 7)) else date
-        next_weekday_datetime = datetime.datetime(next_weekday_date.year, next_weekday_date.month, next_weekday_date.day, 17, 45, 0)
-        return int(next_weekday_datetime.timestamp())
-
     def __init__(self):
         self._logger = logging.getLogger(__name__).getChild(__class__.__name__)
         with open('../.env/google_api_key', 'r') as api_keyfile:
             self.api_key = api_keyfile.readline().rstrip()
         self._logger.debug(f'got api-key [{self.api_key}] from file')
+
+    def _get_next_weekday_as_secs_from_epoch(self, date=datetime.date.today()):
+        next_weekday_date = date + datetime.timedelta(days=-date.isoweekday() + 8) if date.isoweekday() in set((6, 7)) else date
+        next_weekday_datetime = datetime.datetime(next_weekday_date.year, next_weekday_date.month, next_weekday_date.day, 17, 45, 0)
+        return int(next_weekday_datetime.timestamp())
 
     def _get_default_headers(self):
         return {'Content-Type': 'application/json', 

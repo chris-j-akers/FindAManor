@@ -36,6 +36,7 @@ class TrainlineStationFileAdapter(StationFileAdapter):
                         ]
             return stations
 
+
 class TFLFileAdapter(StationFileAdapter):
     FILE_COL_LONGITUDE=0
     FILE_COL_LATITUDE=1     
