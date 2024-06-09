@@ -13,7 +13,7 @@ if __name__ == '__main__':
     args = parse_args()
     # Go!
     sdb = StationsDataSetBuilder.from_file(args.input_file)    
-    print(f'filtering stations to those [{args.radius}km] from origin')    
+    print(f'- Filtering stations to those [{args.radius}km] from origin')    
     sdb.filter_stations_to_radius(int(args.radius))
-    print(f'\t[{sdb.count()}] stations left') 
+    print(f'\t- [{sdb.count()}] stations left') 
     sdb.write(args.output_file if args.output_file is not None else args.input_file)

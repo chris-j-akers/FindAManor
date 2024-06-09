@@ -13,5 +13,6 @@ if __name__ == '__main__':
     args = parse_args()
     # Go!
     sdb = StationsDataSetBuilder.from_file(args.input_file)
+    print(f'- Trying to find google place id for [{sdb.count()}] stations')
     sdb.set_google_place_id()
     sdb.write(args.output_file if args.output_file is not None else args.input_file)

@@ -28,7 +28,10 @@ class StationsDataSetBuilder:
 
     def set_travel_times_from_place_id(self):
         for station in self.stations:
-            self._logger.debug(f'attempting to get travel time for [{self.origin['name']}]')
+            if 'travel_time_secs' in station:
+                self.logger.debug(f'- station [{station['name']}] already has travel times set, skipping')
+                continue            
+            self._logger.debug(f'attempting to get travel time to [{station['name']}]')
             if (time_secs := self.gma.get_journey_time_from_place_id(self.origin['place_id'], station['place_id'])) is not None:
                 self._logger.debug(f'\tgot travel time of {time_secs} seconds')
                 station['travel_time_secs'] = time_secs
@@ -38,6 +41,9 @@ class StationsDataSetBuilder:
 
     def set_travel_times_from_coords(self):
         for station in self.stations:
+            if 'travel_time_secs' in station:
+                self.logger.debug(f'- station [{station['name']}] already has travel times set, skipping')                
+                continue
             self._logger.debug(f'attempting to get travel time for [{self.origin['name']}]')
             if (time_secs := self.gma.get_journey_time_from_coords((self.origin['geometry']['latitude'],self.origin['geometry']['longitude']), (station['geometry']['latitude'],station['geometry']['longitude']))) is not None:
                 self._logger.debug(f'\tgot travel time of {time_secs} seconds')
@@ -52,8 +58,8 @@ class StationsDataSetBuilder:
             if place_id is not None:
                 station['place_id'] = place_id
             else:
-                print(f'no place_id returned for station {station["name"]}')
-                logging.debug(f'noo place_id returned for station {station["name"]}')
+                print(f'\t- No place_id returned for station {station["name"]}')
+                logging.debug(f'no place_id returned for station {station["name"]}')
 
     def filter_stations_to_radius(self, radius_km):
         self.stations = [station for station in self.stations if ('distance_km' in station and station['distance_km'] <= radius_km) or ('distance_km' not in station)]

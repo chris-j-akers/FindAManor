@@ -24,6 +24,8 @@ class GoogleMapsAdapter:
             self._logger.debug(f'{self._format_json(response_json)}')            
             return response_json['rows'][0]['elements'][0]['duration']['value']
         else:
+            self._logger.debug(f'unable to get data for origin: [{origin_place_id}], destination: [{destination_place_id}], response is:')
+            self._logger.debug(f'{self._format_json(response_json)}')            
             return None
         
     def get_journey_time_from_coords(self, origin_coords, destination_coords):
@@ -46,5 +48,6 @@ class GoogleMapsAdapter:
             place_id = response_json['results'][0]['place_id']
             return place_id
         else:
-            self._logger.debug(f'no value for returned')
+            self._logger.debug(f'no place_id available in response:')
+            self._logger.debug(f'{self._format_json(response_json)}')
             return None            
