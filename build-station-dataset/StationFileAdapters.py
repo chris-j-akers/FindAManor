@@ -51,7 +51,7 @@ class TFLFileAdapter(StationFileAdapter):
 
     def _parse_csv_file(self):
         with open(self.csv_filepath) as csv:
-            return [ line.split(',') for line in csv]
+            return [line.split(',') for line in csv]
 
     def _match_station_name(self, kml_station_name, csv_station_name):
         if kml_station_name == csv_station_name:
