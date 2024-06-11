@@ -9,6 +9,8 @@ def parse_args():
     return ap.parse_args()    
 
 if __name__ == '__main__':
+    if input('This command uses the Google Maps Distance Matrix API which can incur cost. Are you sure you want to continue? Y/N: ') not in ['Y','y']:
+        exit(0)    
     args = parse_args()
     logging.basicConfig(filename='find-a-manor.log', filemode='a', format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s', datefmt='%H:%M:%S', level=logging.DEBUG)        
     # Go!

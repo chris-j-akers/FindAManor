@@ -65,10 +65,10 @@ class TFLFileAdapter(StationFileAdapter):
         FILE_COL_NAME = 1
         FILE_COL_FAREZONE = 2
         # Really not very efficient, brute-force searching but I'm more interested in
-        # getting this done quickly - it doesn't need to be fast.
+        # getting this done - it doesn't need to be fast.
         for station in self.csv_data:
             if self._match_station_name(kml_station_name, station[FILE_COL_NAME]):
-                return station[FILE_COL_FAREZONE]
+                return [station[FILE_COL_FAREZONE].split('|')]
         print(f'warning: no tfl fare-zone match for station [{kml_station_name}]')
         return None
 
