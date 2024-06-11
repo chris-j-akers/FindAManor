@@ -68,7 +68,7 @@ class TFLFileAdapter(StationFileAdapter):
         # getting this done - it doesn't need to be fast.
         for station in self.csv_data:
             if self._match_station_name(kml_station_name, station[FILE_COL_NAME]):
-                return [station[FILE_COL_FAREZONE].split('|')]
+                return [int(zone) for zone in station[FILE_COL_FAREZONE].split('|') if zone.isdigit()]
         print(f'warning: no tfl fare-zone match for station [{kml_station_name}]')
         return None
 
