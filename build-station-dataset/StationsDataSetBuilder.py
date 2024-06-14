@@ -66,8 +66,11 @@ class StationsDataSetBuilder:
     def filter_stations_to_radius(self, radius_km):
         self.stations = [station for station in self.stations if ('distance_km' in station and station['distance_km'] <= radius_km) or ('distance_km' not in station)]
 
-    def filter_stations_to_travel_time(self, time_secs):
+    def filter_stations_to_travel_time_lte(self, time_secs):
         self.stations = [station for station in self.stations if ('travel_time_secs' in station and station['travel_time_secs'] <= time_secs) or ('travel_time_secs' not in station)]    
+
+    def filter_stations_to_travel_time_gte(self, time_secs):
+        self.stations = [station for station in self.stations if ('travel_time_secs' in station and station['travel_time_secs'] >= time_secs) or ('travel_time_secs' not in station)]    
 
     def filter_stations_to_fare_zone(self, zone):
         self.stations = [station for station in self.stations if ('zone' not in station) or (station['zone'] != None and max(station['zone']) >= zone)]
