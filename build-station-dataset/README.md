@@ -33,7 +33,7 @@ This example starts from Charing Cross, so we need an origin file with Charing C
 ```
 The values are easy to get manually from the Google Maps GUI at [maps.google.com](maps.google.com). Latitude and Longitude can be found by right-clicking on your place and copying them to clipboard.
 
-![Charing Cross Longitude and Latitude](/readme-assets/charing-cross-coords.png)
+![Charing Cross Longitude and Latitude](/build-station-dataset/readme-assets/charing-cross-coords.png)
 
 The place_id can be found by visiting [https://developers.google.com/maps/documentation/places/web-service/place-id#find-id](https://developers.google.com/maps/documentation/places/web-service/place-id#find-id) and searching for the place.
 
